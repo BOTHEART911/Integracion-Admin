@@ -188,30 +188,57 @@
 
   <div class="container">
 
+    <!-- ===================== LOGIN: PORTAL DE ENLACES ===================== -->
+<section id="portal-login" class="view active" aria-label="Portal de Enlaces">
+  <div class="card">
+    <h1>PORTAL DE ENLACES</h1>
+    <p class="helper"><b>Solo los Enlaces Autorizados tiene acceso a este portal</b></p>
+
+    <label for="login-doc">Documento</label>
+    <input
+      id="login-doc"
+      type="password"
+      inputmode="numeric"
+      placeholder="Sin puntos ni espacios"
+      autocomplete="off"
+      required
+    />
+
+    <div class="btn-row" style="margin-top:14px;">
+      <button id="btn-login-portal" class="btn-primary">Iniciar Sesión</button>
+    </div>
+  </div>
+</section>
+
     <!-- ===================== ARRIBA: REGISTRO DE VOTACIÓN (index2) ===================== -->
-    <section class="card" aria-label="Registro de Votación">
-      <h1 style="color:var(--primary); text-shadow: 0 2px 2px #031732;">REGISTRO DE VOTACIÓN</h1>
-      <p class="helper"><b>Ingresa el número de documento que aparece en el certificado electoral</b></p>
+<section class="card" aria-label="Registro de Votación">
+  <div class="btn-row" style="margin-bottom:12px;">
+    <button id="btn-logout" class="hidden" style="border-color:#dc2626;">Cerrar Sesión</button>
+  </div>
 
-      <label for="documento-voto">Documento</label>
-      <input
-        id="documento-voto"
-        type="tel"
-        inputmode="numeric"
-        placeholder="Sin puntos ni espacios"
-        autocomplete="off"
-        required
-      />
+  <h1 style="color:var(--primary); text-shadow: 0 2px 2px #031732;">REGISTRO DE VOTACIÓN</h1>
 
-      <div class="btn-row" style="margin-top:14px;">
-        <button id="btn-guardar-voto" class="btn-primary">Guardar</button>
-      </div>
-    </section>
+  <p id="label-enlace" class="helper hidden" style="font-weight:800;"></p>
 
-    <div class="divider"><hr></div>
+  <p class="helper"><b>Ingresa el número de documento que aparece en el certificado electoral</b></p>
+
+  <label for="documento-voto">Documento</label>
+  <input
+    id="documento-voto"
+    type="tel"
+    inputmode="numeric"
+    placeholder="Sin puntos ni espacios"
+    autocomplete="off"
+    required
+  />
+
+  <div class="btn-row" style="margin-top:14px;">
+    <button id="btn-guardar-voto" class="btn-primary">Guardar</button>
+  </div>
+</section>
 
     <!-- ===================== ABAJO: REFERIDOS (index1) ===================== -->
-    <section id="view-login" class="view active" aria-label="Referidos">
+<section id="view-login" class="view" aria-label="Referidos">
       <div class="card">
         <h1>REFERIDOS</h1>
         <p class="helper">
@@ -354,6 +381,77 @@
       };
     }
 
+      /* =====================================================================================
+     PORTAL DE ENLACES - LOGIN + SESIÓN (NUEVO)
+     - Valida contra hoja ENLACES (col A)
+     - Obtiene nombre desde LIDERES (col B) por documento
+  ===================================================================================== */
+
+  // Estado global (enlace logueado)
+  let PORTAL_USER = null; // { documento, nombre }
+
+  function setPortalSession(user){
+    PORTAL_USER = user || null;
+
+    const btnLogout = document.getElementById('btn-logout');
+    const labelEnlace = document.getElementById('label-enlace');
+
+    if (PORTAL_USER){
+      if (btnLogout) btnLogout.classList.remove('hidden');
+      if (labelEnlace){
+        labelEnlace.classList.remove('hidden');
+        labelEnlace.textContent = 'ENLACE: ' + (PORTAL_USER.nombre || '');
+      }
+    } else {
+      if (btnLogout) btnLogout.classList.add('hidden');
+      if (labelEnlace){
+        labelEnlace.classList.add('hidden');
+        labelEnlace.textContent = '';
+      }
+    }
+  }
+
+  function showPortalLogin(){
+    // oculta portal (referidos + etc) y muestra login
+    const login = document.getElementById('portal-login');
+    if (login) login.classList.add('active');
+
+    // el portal unificado existente (tu "view-login" de referidos)
+    const portal = document.getElementById('view-login');
+    if (portal) portal.classList.remove('active');
+
+    setPortalSession(null);
+
+    // limpia inputs
+    const inLogin = document.getElementById('login-doc');
+    if (inLogin) inLogin.value = '';
+    try{ inLogin && inLogin.focus(); }catch(_){}
+  }
+
+  function showPortalApp(){
+    const login = document.getElementById('portal-login');
+    if (login) login.classList.remove('active');
+
+    // muestra tu vista unificada existente (referidos)
+    const portal = document.getElementById('view-login');
+    if (portal) portal.classList.add('active');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function validarDocumentoPortal(v){
+    const documento = String(v || '').trim();
+    if(!documento){
+      Swal.fire({ icon:'warning', title:'Documento requerido', text:'Ingresa el documento.' });
+      return null;
+    }
+    if(!/^\d{6,10}$/.test(documento)){
+      Swal.fire({ icon:'warning', title:'Documento inválido', text:'Debe tener de 6 a 10 dígitos (sin puntos ni espacios).' });
+      return null;
+    }
+    return documento;
+  }
+
     /* =====================================================================================
        APP 1: REGISTRO DE VOTACIÓN (index2) - SIN CAMBIAR ENDPOINT
     ===================================================================================== */
@@ -397,7 +495,8 @@
       if(!documento) return;
 
       try{
-        const res = await apiGetVoto('registrarVoto', { documento });
+        const nombre = PORTAL_USER && PORTAL_USER.nombre ? PORTAL_USER.nombre : '';
+        const res = await apiGetVoto('registrarVoto', { documento, nombre });
 
         // status posibles: NOT_FOUND | DUPLICATE | OK
         if(res?.status === 'NOT_FOUND'){
@@ -440,6 +539,58 @@
     });
 
     resetFormVoto();
+
+      // NUEVO: login portal (mismo endpoint de votación)
+  async function portalLogin(documento){
+    const data = await apiGetVoto('portalLogin', { documento });
+    return data; // { allowed:true, nombre:'...' } o { allowed:false }
+  }
+
+  // Binding botón login
+  document.getElementById('btn-login-portal').addEventListener('click', async ()=>{
+    const documento = validarDocumentoPortal(document.getElementById('login-doc').value);
+    if(!documento) return;
+
+    try{
+      const res = await portalLogin(documento);
+
+      if(!res || !res.allowed){
+        await Swal.fire({
+          icon:'info',
+          title:'No tienes acceso',
+          text:'Corrobora el documento',
+          timer: 3000,
+          showConfirmButton: false
+        });
+        return;
+      }
+
+      setPortalSession({ documento, nombre: res.nombre || '' });
+      showPortalApp();
+
+      // opcional: enfocar documento-voto al entrar
+      try{ document.getElementById('documento-voto')?.focus(); }catch(_){}
+    }catch(e){
+      Swal.fire({ icon:'error', title:'Error', text:e.message });
+    }
+  });
+
+  // Enter en input login
+  document.getElementById('login-doc').addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      document.getElementById('btn-login-portal').click();
+    }
+  });
+
+  // Botón cerrar sesión
+  document.getElementById('btn-logout').addEventListener('click', (e)=>{
+    e.preventDefault();
+    showPortalLogin();
+  });
+
+  // Al cargar, arranca en login
+  showPortalLogin();
 
     /* =====================================================================================
        APP 2: REFERIDOS (index1) - SIN CAMBIAR ENDPOINT
