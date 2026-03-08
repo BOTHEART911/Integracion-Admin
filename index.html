@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link rel="icon" href="https://res.cloudinary.com/dqqeavica/image/upload/v1759166341/WhatsApp_mljaqm.webp">
-
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
@@ -26,10 +25,8 @@
       background:#f3f4f6;
     }
 
-    /* Contenedor general: ancho cómodo para ambos */
     .container{ max-width: 1000px; margin: 0 auto; padding: 16px; }
 
-    /* Cards */
     .card{
       background: rgba(255,255,255,.96);
       border: 2px solid #ddd;
@@ -99,7 +96,6 @@
       background:#fff;
     }
 
-    /* Loader centrado (overlay) */
     .loader{
       position:fixed; inset:0;
       display:flex; align-items:center; justify-content:center;
@@ -113,7 +109,6 @@
       opacity:0; pointer-events:none;
     }
 
-    /* Spinner tipo iOS (12 barras) */
     .spinner-ios{ position:relative; width:64px; height:64px; }
     .spinner-ios i{
       position:absolute; left:50%; top:50%;
@@ -140,15 +135,6 @@
     .spinner-ios i:nth-child(11) { transform: rotate(300deg) translateY(-24px); animation-delay:-0.1s; }
     .spinner-ios i:nth-child(12) { transform: rotate(330deg) translateY(-24px); animation-delay: 0s; }
 
-    /* Secciones */
-    .section-title{
-      margin: 18px auto 8px;
-      max-width: 1000px;
-      padding: 0 16px;
-      color:#111;
-      font-weight:800;
-      font-size: 1.05rem;
-    }
     .divider{
       max-width: 1000px;
       margin: 10px auto 0;
@@ -160,7 +146,7 @@
       margin: 14px 0;
     }
 
-    /* Vistas (solo aplica para Referidos) */
+    /* Vistas */
     .view{
       display:none;
       opacity:0;
@@ -178,7 +164,6 @@
 </head>
 
 <body>
-  <!-- Loader único (para ambas apps) -->
   <div id="loader" class="loader hidden" aria-live="polite" aria-busy="true">
     <div class="spinner-ios" role="status" aria-label="Cargando">
       <i></i><i></i><i></i><i></i><i></i><i></i>
@@ -189,128 +174,133 @@
   <div class="container">
 
     <!-- ===================== LOGIN: PORTAL DE ENLACES ===================== -->
-<section id="portal-login" class="view active" aria-label="Portal de Enlaces">
-  <div class="card">
-    <h1>PORTAL DE ENLACES</h1>
-    <p class="helper"><b>Solo los Enlaces Autorizados tiene acceso a este portal</b></p>
-
-    <label for="login-doc">Documento</label>
-    <input
-      id="login-doc"
-      type="password"
-      inputmode="numeric"
-      placeholder="Sin puntos ni espacios"
-      autocomplete="off"
-      required
-    />
-
-    <div class="btn-row" style="margin-top:14px;">
-      <button id="btn-login-portal" class="btn-primary">Iniciar Sesión</button>
-    </div>
-  </div>
-</section>
-
-    <!-- ===================== ARRIBA: REGISTRO DE VOTACIÓN (index2) ===================== -->
-<section class="card" aria-label="Registro de Votación">
-  <div class="btn-row" style="margin-bottom:12px;">
-    <button id="btn-logout" class="hidden" style="border-color:#dc2626;">Cerrar Sesión</button>
-  </div>
-
-  <h1 style="color:var(--primary); text-shadow: 0 2px 2px #031732;">REGISTRO DE VOTACIÓN</h1>
-
-  <p id="label-enlace" class="helper hidden" style="font-weight:800;"></p>
-
-  <p class="helper"><b>Ingresa el número de documento que aparece en el certificado electoral</b></p>
-
-  <label for="documento-voto">Documento</label>
-  <input
-    id="documento-voto"
-    type="tel"
-    inputmode="numeric"
-    placeholder="Sin puntos ni espacios"
-    autocomplete="off"
-    required
-  />
-
-  <div class="btn-row" style="margin-top:14px;">
-    <button id="btn-guardar-voto" class="btn-primary">Guardar</button>
-  </div>
-</section>
-
-    <!-- ===================== ABAJO: REFERIDOS (index1) ===================== -->
-<section id="view-login" class="view" aria-label="Referidos">
+    <section id="portal-login" class="view active" aria-label="Portal de Enlaces">
       <div class="card">
-        <h1>REFERIDOS</h1>
-        <p class="helper">
-          Ingresa tu Documento para registrar o consultar tus referidos.
-        </p>
+        <h1>PORTAL DE ENLACES</h1>
+        <p class="helper"><b>Solo los Enlaces Autorizados tiene acceso a este portal</b></p>
 
-        <label>Documento</label>
-        <input id="doc-login" type="tel" inputmode="numeric" placeholder="Sin puntos ni espacios">
+        <label for="login-doc">Documento</label>
+        <input
+          id="login-doc"
+          type="password"
+          inputmode="numeric"
+          placeholder="Sin puntos ni espacios"
+          autocomplete="off"
+          required
+        />
 
-        <div class="btn-col">
-          <button class="btn-primary" id="btn-registrar">Registrar</button>
-          <button id="btn-validar">Validar</button>
-          <button id="btn-compartir" class="btn-with-icon">
-            <img src="https://res.cloudinary.com/dqqeavica/image/upload/v1759166341/WhatsApp_mljaqm.webp" alt="" aria-hidden="true">
-            <span>Comparte</span>
-          </button>
+        <div class="btn-row" style="margin-top:14px;">
+          <button id="btn-login-portal" class="btn-primary">Iniciar Sesión</button>
         </div>
-      </div>
-
-      <div id="registro-card" class="card hidden">
-        <h2>Nuevo Registro</h2>
-        <p class="helper">
-          Completa la información para crear tu registro de referidos.
-        </p>
-
-        <label>Nombre Completo</label>
-        <input id="reg-nombre" type="text" placeholder="Ingresa tu Nombre completo">
-
-        <label>Whatsapp</label>
-        <input id="reg-telefono" type="tel" inputmode="numeric" placeholder="10 dígitos">
-
-        <label>N° Referido</label>
-        <input id="reg-referencia" type="tel" inputmode="numeric" placeholder="N° de Referido">
-
-        <div class="btn-col">
-          <button class="btn-primary" id="btn-guardar-registro">Guardar</button>
-          <button id="btn-reg-atras">Atrás</button>
-        </div>
-
-        <p class="center muted">
-          Revisa la información antes de guardar.
-        </p>
       </div>
     </section>
 
-        <!-- ===================== TERCERO: CONSULTAR LÍDER ===================== -->
-    <section class="card" aria-label="Consultar Líder">
-      <h1>CONSULTAR LIDER</h1>
-      <p class="helper">
-        Escribe las primeras letras del nombre del líder y selecciona una opción.
-      </p>
+    <!-- ===================== PORTAL APP (VOTACIÓN + REFERIDOS) ===================== -->
+    <section id="portal-app" class="view" aria-label="Portal App">
 
-      <label for="lider-nombre">Nombre de Lider</label>
-      <input
-        id="lider-nombre"
-        type="text"
-        placeholder="Escribe para buscar..."
-        autocomplete="off"
-        list="dl-lideres-consulta"
-      />
-      <datalist id="dl-lideres-consulta"></datalist>
+      <!-- ===================== ARRIBA: REGISTRO DE VOTACIÓN ===================== -->
+      <div class="card" aria-label="Registro de Votación">
+        <div class="btn-row" style="margin-bottom:12px;">
+          <button id="btn-logout" style="border-color:#dc2626;">Cerrar Sesión</button>
+        </div>
 
-      <div class="btn-row" style="margin-top:14px;">
-        <button id="btn-solicitar-codigo" class="btn-primary">SOLICITAR CÓDIGO</button>
+        <h1 style="color:var(--primary); text-shadow: 0 2px 2px #031732;">REGISTRO DE VOTACIÓN</h1>
+
+        <p id="label-enlace" class="helper" style="font-weight:800;"></p>
+
+        <p class="helper"><b>Ingresa el número de documento que aparece en el certificado electoral</b></p>
+
+        <label for="documento-voto">Documento</label>
+        <input
+          id="documento-voto"
+          type="tel"
+          inputmode="numeric"
+          placeholder="Sin puntos ni espacios"
+          autocomplete="off"
+          required
+        />
+
+        <div class="btn-row" style="margin-top:14px;">
+          <button id="btn-guardar-voto" class="btn-primary">Guardar</button>
+        </div>
       </div>
 
-      <!-- (opcional) texto guía -->
-      <p class="center muted" style="margin-top:10px;">
-        Al seleccionar un líder verás su información.
-      </p>
-    </section>
+      <div class="divider"><hr></div>
 
+      <!-- ===================== ABAJO: REFERIDOS ===================== -->
+      <section id="view-login" class="view active" aria-label="Referidos">
+        <div class="card">
+          <h1>REFERIDOS</h1>
+          <p class="helper">
+            Ingresa tu Documento para registrar o consultar tus referidos.
+          </p>
+
+          <label>Documento</label>
+          <input id="doc-login" type="tel" inputmode="numeric" placeholder="Sin puntos ni espacios">
+
+          <div class="btn-col">
+            <button class="btn-primary" id="btn-registrar">Registrar</button>
+            <button id="btn-validar">Validar</button>
+            <button id="btn-compartir" class="btn-with-icon">
+              <img src="https://res.cloudinary.com/dqqeavica/image/upload/v1759166341/WhatsApp_mljaqm.webp" alt="" aria-hidden="true">
+              <span>Comparte</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="registro-card" class="card hidden">
+          <h2>Nuevo Registro</h2>
+          <p class="helper">
+            Completa la información para crear tu registro de referidos.
+          </p>
+
+          <label>Nombre Completo</label>
+          <input id="reg-nombre" type="text" placeholder="Ingresa tu Nombre completo">
+
+          <label>Whatsapp</label>
+          <input id="reg-telefono" type="tel" inputmode="numeric" placeholder="10 dígitos">
+
+          <label>N° Referido</label>
+          <input id="reg-referencia" type="tel" inputmode="numeric" placeholder="N° de Referido">
+
+          <div class="btn-col">
+            <button class="btn-primary" id="btn-guardar-registro">Guardar</button>
+            <button id="btn-reg-atras">Atrás</button>
+          </div>
+
+          <p class="center muted">
+            Revisa la información antes de guardar.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================== TERCERO: CONSULTAR LÍDER ===================== -->
+      <section class="card" aria-label="Consultar Líder">
+        <h1>CONSULTAR LIDER</h1>
+        <p class="helper">
+          Escribe las primeras letras del nombre del líder y selecciona una opción.
+        </p>
+
+        <label for="lider-nombre">Nombre de Lider</label>
+        <input
+          id="lider-nombre"
+          type="text"
+          placeholder="Escribe para buscar..."
+          autocomplete="off"
+          list="dl-lideres-consulta"
+        />
+        <datalist id="dl-lideres-consulta"></datalist>
+
+        <div class="btn-row" style="margin-top:14px;">
+          <button id="btn-solicitar-codigo" class="btn-primary">SOLICITAR CÓDIGO</button>
+        </div>
+
+        <p class="center muted" style="margin-top:10px;">
+          Al seleccionar un líder verás su información.
+        </p>
+      </section>
+
+    </section>
   </div>
 
   <script>
@@ -344,19 +334,14 @@
     }
 
     /* =====================================================================================
-       SONIDOS (unificados) + Patch SweetAlert2
-       - Se respeta el comportamiento de index2 (sonar por icon)
-       - Se respeta el comportamiento de index1 (soundTag: 'login')
+       SONIDOS + Patch SweetAlert2
     ===================================================================================== */
     const SOUNDS = {
-      // Index2
       info: 'https://res.cloudinary.com/dqqeavica/video/upload/v1759011578/Default_notification_pkp4wr.mp3',
       success: 'https://res.cloudinary.com/dqqeavica/video/upload/v1759011577/Pay_success_t5aawh.mp3',
       error: 'https://res.cloudinary.com/dqqeavica/video/upload/v1759011578/Low_battery_d5qua1.mp3',
       warning: 'https://res.cloudinary.com/dqqeavica/video/upload/v1759011578/Low_battery_d5qua1.mp3',
       question: 'https://res.cloudinary.com/dqqeavica/video/upload/v1759011577/Pay_fail_ls2aif.mp3',
-
-      // Index1 extra
       login: 'https://res.cloudinary.com/dqqeavica/video/upload/v1759011577/Siri_star_g1owy4.mp3'
     };
 
@@ -368,7 +353,6 @@
       }catch(e){}
     }
 
-    // Patch SweetAlert2 (una sola vez)
     if (window.Swal && typeof Swal.fire === 'function'){
       const __fire = Swal.fire.bind(Swal);
       Swal.fire = function(options = {}, ...rest){
@@ -381,79 +365,48 @@
       };
     }
 
-      /* =====================================================================================
-     PORTAL DE ENLACES - LOGIN + SESIÓN (NUEVO)
-     - Valida contra hoja ENLACES (col A)
-     - Obtiene nombre desde LIDERES (col B) por documento
-  ===================================================================================== */
+    /* =====================================================================================
+       PORTAL DE ENLACES - LOGIN + SESIÓN
+    ===================================================================================== */
+    let PORTAL_USER = null; // { documento, nombre }
 
-  // Estado global (enlace logueado)
-  let PORTAL_USER = null; // { documento, nombre }
+    function setPortalSession(user){
+      PORTAL_USER = user || null;
+      const label = document.getElementById('label-enlace');
+      label.textContent = PORTAL_USER ? ('ENLACE: ' + (PORTAL_USER.nombre || '')) : '';
+    }
 
-  function setPortalSession(user){
-    PORTAL_USER = user || null;
+    function showPortalLogin(){
+      document.getElementById('portal-login').classList.add('active');
+      document.getElementById('portal-app').classList.remove('active');
+      setPortalSession(null);
+      const inLogin = document.getElementById('login-doc');
+      inLogin.value = '';
+      try{ inLogin.focus(); }catch(_){}
+    }
 
-    const btnLogout = document.getElementById('btn-logout');
-    const labelEnlace = document.getElementById('label-enlace');
+    function showPortalApp(){
+      document.getElementById('portal-login').classList.remove('active');
+      document.getElementById('portal-app').classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      try{ document.getElementById('documento-voto')?.focus(); }catch(_){}
+    }
 
-    if (PORTAL_USER){
-      if (btnLogout) btnLogout.classList.remove('hidden');
-      if (labelEnlace){
-        labelEnlace.classList.remove('hidden');
-        labelEnlace.textContent = 'ENLACE: ' + (PORTAL_USER.nombre || '');
+    function validarDocumentoPortal(v){
+      const documento = String(v || '').trim();
+      if(!documento){
+        Swal.fire({ icon:'warning', title:'Documento requerido', text:'Ingresa el documento.' });
+        return null;
       }
-    } else {
-      if (btnLogout) btnLogout.classList.add('hidden');
-      if (labelEnlace){
-        labelEnlace.classList.add('hidden');
-        labelEnlace.textContent = '';
+      if(!/^\d{6,10}$/.test(documento)){
+        Swal.fire({ icon:'warning', title:'Documento inválido', text:'Debe tener de 6 a 10 dígitos (sin puntos ni espacios).' });
+        return null;
       }
+      return documento;
     }
-  }
-
-  function showPortalLogin(){
-    // oculta portal (referidos + etc) y muestra login
-    const login = document.getElementById('portal-login');
-    if (login) login.classList.add('active');
-
-    // el portal unificado existente (tu "view-login" de referidos)
-    const portal = document.getElementById('view-login');
-    if (portal) portal.classList.remove('active');
-
-    setPortalSession(null);
-
-    // limpia inputs
-    const inLogin = document.getElementById('login-doc');
-    if (inLogin) inLogin.value = '';
-    try{ inLogin && inLogin.focus(); }catch(_){}
-  }
-
-  function showPortalApp(){
-    const login = document.getElementById('portal-login');
-    if (login) login.classList.remove('active');
-
-    // muestra tu vista unificada existente (referidos)
-    const portal = document.getElementById('view-login');
-    if (portal) portal.classList.add('active');
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function validarDocumentoPortal(v){
-    const documento = String(v || '').trim();
-    if(!documento){
-      Swal.fire({ icon:'warning', title:'Documento requerido', text:'Ingresa el documento.' });
-      return null;
-    }
-    if(!/^\d{6,10}$/.test(documento)){
-      Swal.fire({ icon:'warning', title:'Documento inválido', text:'Debe tener de 6 a 10 dígitos (sin puntos ni espacios).' });
-      return null;
-    }
-    return documento;
-  }
 
     /* =====================================================================================
-       APP 1: REGISTRO DE VOTACIÓN (index2) - SIN CAMBIAR ENDPOINT
+       APP 1: REGISTRO DE VOTACIÓN (endpoint votación)
     ===================================================================================== */
     const API_BASE_VOTO = 'https://script.google.com/macros/s/AKfycbynqDDTonOjq3wJaeeOdTkj59AfA2DFLSlGv9veiPNeFipSjKjA0nXgtwDf2u1FQQTn/exec';
 
@@ -470,6 +423,47 @@
         stopLoading();
       }
     }
+
+    async function portalLogin(documento){
+      return await apiGetVoto('portalLogin', { documento });
+    }
+
+    document.getElementById('btn-login-portal').addEventListener('click', async ()=>{
+      const documento = validarDocumentoPortal(document.getElementById('login-doc').value);
+      if(!documento) return;
+
+      try{
+        const res = await portalLogin(documento);
+
+        if(!res || !res.allowed){
+          await Swal.fire({
+            icon:'info',
+            title:'No tienes acceso',
+            text:'Corrobora el documento',
+            timer: 3000,
+            showConfirmButton: false
+          });
+          return;
+        }
+
+        setPortalSession({ documento, nombre: res.nombre || '' });
+        showPortalApp();
+      }catch(e){
+        Swal.fire({ icon:'error', title:'Error', text:e.message });
+      }
+    });
+
+    document.getElementById('login-doc').addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        document.getElementById('btn-login-portal').click();
+      }
+    });
+
+    document.getElementById('btn-logout').addEventListener('click', (e)=>{
+      e.preventDefault();
+      showPortalLogin();
+    });
 
     function resetFormVoto(){
       const doc = document.getElementById('documento-voto');
@@ -494,37 +488,28 @@
       const documento = validarDocumentoVoto(document.getElementById('documento-voto').value);
       if(!documento) return;
 
+      if(!PORTAL_USER){
+        Swal.fire({ icon:'info', title:'Sesión requerida', text:'Inicia sesión en el portal.' });
+        showPortalLogin();
+        return;
+      }
+
       try{
-        const nombre = PORTAL_USER && PORTAL_USER.nombre ? PORTAL_USER.nombre : '';
+        const nombre = PORTAL_USER.nombre || '';
         const res = await apiGetVoto('registrarVoto', { documento, nombre });
 
-        // status posibles: NOT_FOUND | DUPLICATE | OK
         if(res?.status === 'NOT_FOUND'){
-          await Swal.fire({
-            icon:'info',
-            title:'DOCUMENTO INEXISTENTE',
-            text:'Usa la estrategia de registro con el grupo.'
-          });
+          await Swal.fire({ icon:'info', title:'DOCUMENTO INEXISTENTE', text:'Usa la estrategia de registro con el grupo.' });
           return;
         }
 
         if(res?.status === 'DUPLICATE'){
-          await Swal.fire({
-            icon:'info',
-            title:'YA REGISTRADO',
-            text:'Este documento ya registró su voto.'
-          });
+          await Swal.fire({ icon:'info', title:'YA REGISTRADO', text:'Este documento ya registró su voto.' });
           resetFormVoto();
           return;
         }
 
-        await Swal.fire({
-          icon:'success',
-          title:'VOTO REGISTRADO',
-          timer: 2000,
-          showConfirmButton: false
-        });
-
+        await Swal.fire({ icon:'success', title:'VOTO REGISTRADO', timer: 2000, showConfirmButton: false });
         resetFormVoto();
       }catch(e){
         Swal.fire({ icon:'error', title:'Error', text: e.message });
@@ -538,63 +523,8 @@
       }
     });
 
-    resetFormVoto();
-
-      // NUEVO: login portal (mismo endpoint de votación)
-  async function portalLogin(documento){
-    const data = await apiGetVoto('portalLogin', { documento });
-    return data; // { allowed:true, nombre:'...' } o { allowed:false }
-  }
-
-  // Binding botón login
-  document.getElementById('btn-login-portal').addEventListener('click', async ()=>{
-    const documento = validarDocumentoPortal(document.getElementById('login-doc').value);
-    if(!documento) return;
-
-    try{
-      const res = await portalLogin(documento);
-
-      if(!res || !res.allowed){
-        await Swal.fire({
-          icon:'info',
-          title:'No tienes acceso',
-          text:'Corrobora el documento',
-          timer: 3000,
-          showConfirmButton: false
-        });
-        return;
-      }
-
-      setPortalSession({ documento, nombre: res.nombre || '' });
-      showPortalApp();
-
-      // opcional: enfocar documento-voto al entrar
-      try{ document.getElementById('documento-voto')?.focus(); }catch(_){}
-    }catch(e){
-      Swal.fire({ icon:'error', title:'Error', text:e.message });
-    }
-  });
-
-  // Enter en input login
-  document.getElementById('login-doc').addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter'){
-      e.preventDefault();
-      document.getElementById('btn-login-portal').click();
-    }
-  });
-
-  // Botón cerrar sesión
-  document.getElementById('btn-logout').addEventListener('click', (e)=>{
-    e.preventDefault();
-    showPortalLogin();
-  });
-
-  // Al cargar, arranca en login
-  showPortalLogin();
-
     /* =====================================================================================
-       APP 2: REFERIDOS (index1) - SIN CAMBIAR ENDPOINT
-       (Se conserva la lógica; se renombran funciones internas para no chocar con las de Voto)
+       APP 2: REFERIDOS (sin cambiar endpoint)
     ===================================================================================== */
     const API_BASE_REFERIDOS = 'https://script.google.com/macros/s/AKfycby1qmaPhvKbUOYDSAzIco9YPTnV-PRSer5PmR2zWrxMVC1hsUxEjmhAKv-fTcYrgvSh/exec';
 
@@ -648,8 +578,9 @@
       }
     }
 
+    // OJO: showViewRef manipula TODAS las .view. Se deja solo para uso interno del módulo referidos.
     function showViewRef(id){
-      var views = document.querySelectorAll('.view');
+      var views = document.querySelectorAll('#portal-app .view');
       var i;
       for (i = 0; i < views.length; i = i + 1){
         views[i].classList.remove('active');
@@ -916,149 +847,131 @@
     showViewRef('view-login');
 
     /* =====================================================================================
-   APP 3: CONSULTAR LÍDER (nuevo endpoint)
-   - Pega este bloque al final del <script> (después del código de Referidos)
-   - AQUÍ defines el URL del nuevo despliegue (Web App) para esta vista
-===================================================================================== */
+       APP 3: CONSULTAR LÍDER (endpoint separado)
+    ===================================================================================== */
+    const API_BASE_CONSULTA_LIDER = 'https://script.google.com/macros/s/AKfycbwS0MHWNkF06LjVRnzdfMUBd-E3sX5cyVLdq4A1La6Yu904z9GEjgHmeolGKbacwPXlfg/exec';
+    let selectedLeader = null;
 
-// 1) >>>>>> PON AQUÍ EL URL DE IMPLEMENTACIÓN DEL NUEVO APPS SCRIPT (WEB APP) <<<<<<
-const API_BASE_CONSULTA_LIDER = 'https://script.google.com/macros/s/AKfycbwS0MHWNkF06LjVRnzdfMUBd-E3sX5cyVLdq4A1La6Yu904z9GEjgHmeolGKbacwPXlfg/exec';
-
-// Estado del líder seleccionado (para usar en "SOLICITAR CÓDIGO")
-let selectedLeader = null;
-
-// Helpers fetch (GET) para esta app 3
-async function apiGetConsultaLider(action, params = {}){
-  startLoading();
-  try{
-    const url = new URL(API_BASE_CONSULTA_LIDER);
-    url.search = new URLSearchParams({ action, ...params }).toString();
-    const r = await fetch(url.toString(), { method:'GET' });
-    const j = await r.json();
-    if(!j.ok) throw new Error(j.error || 'Error');
-    return j.data;
-  } finally {
-    stopLoading();
-  }
-}
-
-function setDatalistOptions(datalistEl, items){
-  if(!datalistEl) return;
-  datalistEl.innerHTML = '';
-  (items || []).forEach(it => {
-    const opt = document.createElement('option');
-    // Mostramos el nombre como valor (igual que en indexref)
-    opt.value = it.nombre || '';
-    // Guardamos metadata por si quieres usarla, pero el "click" lo manejamos con change + getLiderByName
-    datalistEl.appendChild(opt);
-  });
-}
-
-function normalizeUpper(s){
-  return String(s || '').trim().toUpperCase();
-}
-
-// Autocomplete: consulta por letras -> llena datalist
-(function bindConsultarLiderAutocomplete(){
-  const input = document.getElementById('lider-nombre');
-  const list  = document.getElementById('dl-lideres-consulta');
-  if(!input || !list) return;
-
-  let t = null;
-
-  input.addEventListener('input', function(){
-    const q = String(input.value || '').trim();
-    selectedLeader = null; // si vuelve a escribir, invalida selección previa
-
-    if(t) clearTimeout(t);
-    if(!q){
-      list.innerHTML = '';
-      return;
+    async function apiGetConsultaLider(action, params = {}){
+      startLoading();
+      try{
+        const url = new URL(API_BASE_CONSULTA_LIDER);
+        url.search = new URLSearchParams({ action, ...params }).toString();
+        const r = await fetch(url.toString(), { method:'GET' });
+        const j = await r.json();
+        if(!j.ok) throw new Error(j.error || 'Error');
+        return j.data;
+      } finally {
+        stopLoading();
+      }
     }
 
-    t = setTimeout(async function(){
-      try{
-        // Trae sugerencias desde GS (filtra por columna B)
-        const data = await apiGetConsultaLider('getLideresQuery', { query: q });
-        // data: [{codigo,nombre,dependencia}]
-        setDatalistOptions(list, Array.isArray(data) ? data : []);
-      }catch(_){
-        // silencio para no molestar al usuario al teclear
-      }
-    }, 200);
-  });
+    function setDatalistOptions(datalistEl, items){
+      if(!datalistEl) return;
+      datalistEl.innerHTML = '';
+      (items || []).forEach(it => {
+        const opt = document.createElement('option');
+        opt.value = it.nombre || '';
+        datalistEl.appendChild(opt);
+      });
+    }
 
-  // Cuando el usuario elige una opción del datalist (change), pedimos el detalle exacto por nombre
-  input.addEventListener('change', async function(){
-    const nombre = String(input.value || '').trim();
-    if(!nombre) return;
+    (function bindConsultarLiderAutocomplete(){
+      const input = document.getElementById('lider-nombre');
+      const list  = document.getElementById('dl-lideres-consulta');
+      if(!input || !list) return;
 
-    try{
-      const detail = await apiGetConsultaLider('getLiderByName', { nombre: nombre });
-      if(!detail || !detail.existe){
+      let t = null;
+
+      input.addEventListener('input', function(){
+        const q = String(input.value || '').trim();
         selectedLeader = null;
-        return;
-      }
 
-      selectedLeader = {
-        codigo: detail.codigo || '',
-        nombre: detail.nombre || nombre,
-        dependencia: detail.dependencia || ''
-      };
+        if(t) clearTimeout(t);
+        if(!q){
+          list.innerHTML = '';
+          return;
+        }
 
-      await Swal.fire({
-        icon: 'success',
-        title: 'LÍDER ENCONTRADO',
-        html:
-          '<b>NOMBRE:</b> ' + (selectedLeader.nombre || '') + '<br>' +
-          '<b>CÓDIGO:</b> ' + (selectedLeader.codigo || '') + '<br>' +
-          '<b>DEPENDECIA:</b> ' + (selectedLeader.dependencia || ''),
-        timer: 3000,
-        showConfirmButton: false
+        t = setTimeout(async function(){
+          try{
+            const data = await apiGetConsultaLider('getLideresQuery', { query: q });
+            setDatalistOptions(list, Array.isArray(data) ? data : []);
+          }catch(_){}
+        }, 200);
       });
 
-    }catch(e){
-      selectedLeader = null;
-      Swal.fire({ icon:'error', title:'Error', text: e.message });
-    }
-  });
-})();
+      input.addEventListener('change', async function(){
+        const nombre = String(input.value || '').trim();
+        if(!nombre) return;
 
-// Botón: SOLICITAR CÓDIGO -> WhatsApp a 573103230712
-(function bindSolicitarCodigo(){
-  const btn = document.getElementById('btn-solicitar-codigo');
-  const input = document.getElementById('lider-nombre');
-  if(!btn) return;
+        try{
+          const detail = await apiGetConsultaLider('getLiderByName', { nombre: nombre });
+          if(!detail || !detail.existe){
+            selectedLeader = null;
+            return;
+          }
 
-   btn.addEventListener('click', function(){
-    // Documento: tomamos el Documento del login de referidos (si existe)
-    const documento = String(document.getElementById('doc-login')?.value || '').trim();
+          selectedLeader = {
+            codigo: detail.codigo || '',
+            nombre: detail.nombre || nombre,
+            dependencia: detail.dependencia || ''
+          };
 
-    const msg =
-      'Oscar, necesito un código.\n' +
-      '*Nombre:*\n' +
-      '*Documento:*\n' + (documento || '') + '\n' +
-      '*Dependencia:*';
+          await Swal.fire({
+            icon: 'success',
+            title: 'LÍDER ENCONTRADO',
+            html:
+              '<b>NOMBRE:</b> ' + (selectedLeader.nombre || '') + '<br>' +
+              '<b>CÓDIGO:</b> ' + (selectedLeader.codigo || '') + '<br>' +
+              '<b>DEPENDECIA:</b> ' + (selectedLeader.dependencia || ''),
+            timer: 3000,
+            showConfirmButton: false
+          });
 
-    // Copiar al portapapeles (opcional)
-    try{
-      if (navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(msg).catch(()=>{});
-      }
-    }catch(_){}
+        }catch(e){
+          selectedLeader = null;
+          Swal.fire({ icon:'error', title:'Error', text: e.message });
+        }
+      });
+    })();
 
-    const enc = encodeURIComponent(msg);
-    const ua = navigator.userAgent || '';
-    const esMovil = /android|iphone|ipad|mobile/i.test(ua);
+    (function bindSolicitarCodigo(){
+      const btn = document.getElementById('btn-solicitar-codigo');
+      if(!btn) return;
 
-    // a número fijo:
-    const waNumber = '573103230712';
-    const hrefMovil = 'whatsapp://send?phone=' + waNumber + '&text=' + enc;
-    const hrefWeb   = 'https://api.whatsapp.com/send?phone=' + waNumber + '&text=' + enc;
+      btn.addEventListener('click', function(){
+        const documento = String(document.getElementById('doc-login')?.value || '').trim();
 
-    window.open(esMovil ? hrefMovil : hrefWeb, '_blank');
-  });
-})();
+        const msg =
+          'Oscar, necesito un código.\n' +
+          '*Nombre:*\n' +
+          '*Documento:*\n' + (documento || '') + '\n' +
+          '*Dependencia:*';
+
+        try{
+          if (navigator.clipboard && navigator.clipboard.writeText){
+            navigator.clipboard.writeText(msg).catch(()=>{});
+          }
+        }catch(_){}
+
+        const enc = encodeURIComponent(msg);
+        const ua = navigator.userAgent || '';
+        const esMovil = /android|iphone|ipad|mobile/i.test(ua);
+
+        const waNumber = '573103230712';
+        const hrefMovil = 'whatsapp://send?phone=' + waNumber + '&text=' + enc;
+        const hrefWeb   = 'https://api.whatsapp.com/send?phone=' + waNumber + '&text=' + enc;
+
+        window.open(esMovil ? hrefMovil : hrefWeb, '_blank');
+      });
+    })();
+
+    /* =====================================================================================
+       INIT
+    ===================================================================================== */
+    // Inicia SIEMPRE en login
+    showPortalLogin();
   </script>
 </body>
 </html>
