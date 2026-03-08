@@ -257,6 +257,33 @@
       </div>
     </section>
 
+        <!-- ===================== TERCERO: CONSULTAR LÍDER ===================== -->
+    <section class="card" aria-label="Consultar Líder">
+      <h1>CONSULTAR LIDER</h1>
+      <p class="helper">
+        Escribe las primeras letras del nombre del líder y selecciona una opción.
+      </p>
+
+      <label for="lider-nombre">Nombre de Lider</label>
+      <input
+        id="lider-nombre"
+        type="text"
+        placeholder="Escribe para buscar..."
+        autocomplete="off"
+        list="dl-lideres-consulta"
+      />
+      <datalist id="dl-lideres-consulta"></datalist>
+
+      <div class="btn-row" style="margin-top:14px;">
+        <button id="btn-solicitar-codigo" class="btn-primary">SOLICITAR CÓDIGO</button>
+      </div>
+
+      <!-- (opcional) texto guía -->
+      <p class="center muted" style="margin-top:10px;">
+        Al seleccionar un líder verás su información.
+      </p>
+    </section>
+
   </div>
 
   <script>
@@ -736,6 +763,158 @@
     });
 
     showViewRef('view-login');
+
+    /* =====================================================================================
+   APP 3: CONSULTAR LÍDER (nuevo endpoint)
+   - Pega este bloque al final del <script> (después del código de Referidos)
+   - AQUÍ defines el URL del nuevo despliegue (Web App) para esta vista
+===================================================================================== */
+
+// 1) >>>>>> PON AQUÍ EL URL DE IMPLEMENTACIÓN DEL NUEVO APPS SCRIPT (WEB APP) <<<<<<
+const API_BASE_CONSULTA_LIDER = 'https://script.google.com/macros/s/AKfycbwS0MHWNkF06LjVRnzdfMUBd-E3sX5cyVLdq4A1La6Yu904z9GEjgHmeolGKbacwPXlfg/exec';
+
+// Estado del líder seleccionado (para usar en "SOLICITAR CÓDIGO")
+let selectedLeader = null;
+
+// Helpers fetch (GET) para esta app 3
+async function apiGetConsultaLider(action, params = {}){
+  startLoading();
+  try{
+    const url = new URL(API_BASE_CONSULTA_LIDER);
+    url.search = new URLSearchParams({ action, ...params }).toString();
+    const r = await fetch(url.toString(), { method:'GET' });
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.error || 'Error');
+    return j.data;
+  } finally {
+    stopLoading();
+  }
+}
+
+function setDatalistOptions(datalistEl, items){
+  if(!datalistEl) return;
+  datalistEl.innerHTML = '';
+  (items || []).forEach(it => {
+    const opt = document.createElement('option');
+    // Mostramos el nombre como valor (igual que en indexref)
+    opt.value = it.nombre || '';
+    // Guardamos metadata por si quieres usarla, pero el "click" lo manejamos con change + getLiderByName
+    datalistEl.appendChild(opt);
+  });
+}
+
+function normalizeUpper(s){
+  return String(s || '').trim().toUpperCase();
+}
+
+// Autocomplete: consulta por letras -> llena datalist
+(function bindConsultarLiderAutocomplete(){
+  const input = document.getElementById('lider-nombre');
+  const list  = document.getElementById('dl-lideres-consulta');
+  if(!input || !list) return;
+
+  let t = null;
+
+  input.addEventListener('input', function(){
+    const q = String(input.value || '').trim();
+    selectedLeader = null; // si vuelve a escribir, invalida selección previa
+
+    if(t) clearTimeout(t);
+    if(!q){
+      list.innerHTML = '';
+      return;
+    }
+
+    t = setTimeout(async function(){
+      try{
+        // Trae sugerencias desde GS (filtra por columna B)
+        const data = await apiGetConsultaLider('getLideresQuery', { query: q });
+        // data: [{codigo,nombre,dependencia}]
+        setDatalistOptions(list, Array.isArray(data) ? data : []);
+      }catch(_){
+        // silencio para no molestar al usuario al teclear
+      }
+    }, 200);
+  });
+
+  // Cuando el usuario elige una opción del datalist (change), pedimos el detalle exacto por nombre
+  input.addEventListener('change', async function(){
+    const nombre = String(input.value || '').trim();
+    if(!nombre) return;
+
+    try{
+      const detail = await apiGetConsultaLider('getLiderByName', { nombre: nombre });
+      if(!detail || !detail.existe){
+        selectedLeader = null;
+        return;
+      }
+
+      selectedLeader = {
+        codigo: detail.codigo || '',
+        nombre: detail.nombre || nombre,
+        dependencia: detail.dependencia || ''
+      };
+
+      await Swal.fire({
+        icon: 'success',
+        title: 'LÍDER ENCONTRADO',
+        html:
+          '<b>NOMBRE:</b> ' + (selectedLeader.nombre || '') + '<br>' +
+          '<b>CÓDIGO:</b> ' + (selectedLeader.codigo || '') + '<br>' +
+          '<b>DEPENDECIA:</b> ' + (selectedLeader.dependencia || ''),
+        timer: 2000,
+        showConfirmButton: false
+      });
+
+    }catch(e){
+      selectedLeader = null;
+      Swal.fire({ icon:'error', title:'Error', text: e.message });
+    }
+  });
+})();
+
+// Botón: SOLICITAR CÓDIGO -> WhatsApp a 573103230712
+(function bindSolicitarCodigo(){
+  const btn = document.getElementById('btn-solicitar-codigo');
+  const input = document.getElementById('lider-nombre');
+  if(!btn) return;
+
+  btn.addEventListener('click', function(){
+    const nombre = selectedLeader?.nombre || String(input?.value || '').trim();
+    const dependencia = selectedLeader?.dependencia || '';
+    // Documento: aquí NO hay campo en esta vista; usamos el Documento del login de referidos (si existe)
+    const documento = String(document.getElementById('doc-login')?.value || '').trim();
+
+    if(!nombre){
+      Swal.fire({ icon:'warning', title:'Selecciona un líder', text:'Escribe y selecciona un líder primero.' });
+      return;
+    }
+
+    const msg =
+      'Oscar, necesito un código.\n' +
+      '*Nombre:*\n' + nombre + '\n' +
+      '*Documento:*\n' + (documento || 'N/A') + '\n' +
+      '*Dependencia:*\n' + (dependencia || 'N/A');
+
+    // Copiar al portapapeles (opcional)
+    try{
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(msg).catch(()=>{});
+      }
+    }catch(_){}
+
+    const enc = encodeURIComponent(msg);
+    const ua = navigator.userAgent || '';
+    const esMovil = /android|iphone|ipad|mobile/i.test(ua);
+
+    // a número fijo:
+    const waNumber = '573103230712';
+    const hrefMovil = 'whatsapp://send?phone=' + waNumber + '&text=' + enc;
+    const hrefWeb   = 'https://api.whatsapp.com/send?phone=' + waNumber + '&text=' + enc;
+
+    window.open(esMovil ? hrefMovil : hrefWeb, '_blank');
+  });
+})();
   </script>
 </body>
 </html>
