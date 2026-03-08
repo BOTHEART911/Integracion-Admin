@@ -862,7 +862,7 @@ function normalizeUpper(s){
           '<b>NOMBRE:</b> ' + (selectedLeader.nombre || '') + '<br>' +
           '<b>CÓDIGO:</b> ' + (selectedLeader.codigo || '') + '<br>' +
           '<b>DEPENDECIA:</b> ' + (selectedLeader.dependencia || ''),
-        timer: 2000,
+        timer: 3000,
         showConfirmButton: false
       });
 
@@ -879,22 +879,15 @@ function normalizeUpper(s){
   const input = document.getElementById('lider-nombre');
   if(!btn) return;
 
-  btn.addEventListener('click', function(){
-    const nombre = selectedLeader?.nombre || String(input?.value || '').trim();
-    const dependencia = selectedLeader?.dependencia || '';
-    // Documento: aquí NO hay campo en esta vista; usamos el Documento del login de referidos (si existe)
+   btn.addEventListener('click', function(){
+    // Documento: tomamos el Documento del login de referidos (si existe)
     const documento = String(document.getElementById('doc-login')?.value || '').trim();
-
-    if(!nombre){
-      Swal.fire({ icon:'warning', title:'Selecciona un líder', text:'Escribe y selecciona un líder primero.' });
-      return;
-    }
 
     const msg =
       'Oscar, necesito un código.\n' +
-      '*Nombre:*\n' + nombre + '\n' +
-      '*Documento:*\n' + (documento || 'N/A') + '\n' +
-      '*Dependencia:*\n' + (dependencia || 'N/A');
+      '*Nombre:*\n' +
+      '*Documento:*\n' + (documento || '') + '\n' +
+      '*Dependencia:*';
 
     // Copiar al portapapeles (opcional)
     try{
